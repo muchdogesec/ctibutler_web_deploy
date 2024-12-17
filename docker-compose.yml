@@ -4,6 +4,8 @@ services:
     command: bash -c "python manage.py migrate && python -m ctibutler.worker.populate_dbs"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    environment:
+      - DJANGO_ALLOWED_HOSTS=ctibutler
   ctibutler:
     extends: ctibutler_base
     command: bash -c "gunicorn ctibutler.wsgi:application --reload --bind 0.0.0.0:8006"
@@ -12,6 +14,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    expose:
+      - 8006:8006
   ctibutler_celery:
     extends: ctibutler_base
     command: bash -c "celery -A ctibutler.worker worker -l INFO"
