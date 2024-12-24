@@ -10,7 +10,7 @@ services:
     extends: ctibutler_base
     command: bash -c "gunicorn ctibutler.wsgi:application --reload --bind 0.0.0.0:8006"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://ctibutler:8006/api/schema/"]
+      test: ["CMD", "python", "-c", "import requests; print(requests.get('''http://ctibutler:8006/api/schema/''').text)"]
       interval: 30s
       timeout: 10s
       retries: 5
